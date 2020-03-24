@@ -44,18 +44,6 @@ fi
 # If we are here XRT is being uninstalled. It is NOT one of upgrade, downgrade or
 # re-install.
 
-# Stop and remove all daemons
-echo "Removing MSD / MPD daemons"
-systemctl stop msd > /dev/null 2>&1
-systemctl disable msd > /dev/null 2>&1
-systemctl stop mpd > /dev/null 2>&1
-systemctl disable mpd > /dev/null 2>&1
-rm -rf /etc/systemd/system/msd.service
-rm -rf /etc/systemd/system/mpd.service
-systemctl daemon-reload
-# Remove config file for MSD as well
-/opt/xilinx/xrt/bin/xbmgmt config --purge 2>&1 > /dev/null
-
 echo "Unloading old XRT Linux kernel modules"
 rmmod zocl
 

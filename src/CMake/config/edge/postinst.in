@@ -23,39 +23,44 @@
 # 3. When re-installing (say from 2.2.0 to 2.2.0) then prerm is NOT run but
 #    and postinst of 2.2.0 is run. The postinst is invoked with "2" argument.
 
+rmmodules()
+{
+    find /lib/modules -type f -name zocl.ko -delete
+    find /lib/modules -type f -name zocl.ko.kz -delete
+    find /lib/modules -type f -name zocl.ko.xz -delete
+    depmod -A
+}
+
 installdir=/opt/xilinx/xrt
 systemddir=/etc/systemd/system
 
-msd_active=`systemctl is-active msd`
-mpd_active=`systemctl is-active mpd`
-# Stopping existing daemons so that we could swap drivers and update daemons later
-if [ "$mpd_active" = "active" ]; then
-    echo "Stopping MPD daemon"
-    systemctl stop mpd > /dev/null 2>&1
+echo "Unloading old XRT Linux kernel modules"
+rmmod zocl
+XRT_VERSION_STRING_OLD=`dkms status -m xrt | awk -F, '{print $2}'`
+for OLD in $XRT_VERSION_STRING_OLD; do
+    echo "Unregistering old XRT Linux kernel module sources $OLD from dkms"
+    dkms remove -m xrt -v $OLD --all
+    break
+done
+rmmodules
+
+echo "Invoking DKMS common.postinst for xrt"
+/usr/lib/dkms/common.postinst xrt @XRT_VERSION_STRING@ "" "" $2
+if [ $? -eq 0 ]; then
+    echo "Finished DKMS common.postinst"
+    echo "Loading new XRT Linux kernel modules"
+    udevadm control --reload-rules
+    modprobe zocl
+    udevadm trigger
 fi
-if [ "$msd_active" = "active" ]; then
-    echo "Stopping MSD daemon"
-    systemctl stop msd > /dev/null 2>&1
-fi
 
-echo "Installing MSD / MPD daemons"
-
-# Update msd configuration before start daemons
-${installdir}/bin/xbmgmt config --daemon
-
-# Install msd/mpd services
-cp -f ${installdir}/etc/msd.service ${systemddir}
-cp -f ${installdir}/etc/mpd.service ${systemddir}
-systemctl daemon-reload > /dev/null 2>&1
-
-# Start daemons only when it was started previously
-if [ "$msd_active" = "active" ]; then
-    echo "Starting MSD daemon"
-    systemctl start msd > /dev/null 2>&1
-fi
-if [ "$mpd_active" = "active" ]; then
-    echo "Starting MPD daemon"
-    systemctl start mpd > /dev/null 2>&1
+if [ -z "`dkms status -m xrt -v @XRT_VERSION_STRING@ |grep installed`" ]; then
+    echo "****************************************************************"
+    echo "* DKMS failed to install XRT drivers."
+    echo "* Please check if kernel development headers are installed for OS variant used."
+    echo "* "
+    echo "* Check build logs in /var/lib/dkms/xrt/@XRT_VERSION_STRING@"
+    echo "****************************************************************"
 fi
 
 #install pyopencl
