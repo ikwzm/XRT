@@ -9,24 +9,24 @@ set (XRT_DKMS_INSTALL_DRIVER_DIR "${XRT_DKMS_INSTALL_DIR}/driver")
 message("-- XRT DRIVER SRC BASE DIR ${XRT_DKMS_DRIVER_SRC_BASE_DIR}")
 
 SET (DKMS_FILE_NAME "dkms.conf")
-SET (DKMS_POSTINST "postinst-edge")
-SET (DKMS_PRERM "prerm-edge")
+SET (DKMS_POSTINST "postinst")
+SET (DKMS_PRERM "prerm")
 
 configure_file (
   "${CMAKE_SOURCE_DIR}/CMake/config/dkms-zocl/${DKMS_FILE_NAME}.in"
-  "edge/${DKMS_FILE_NAME}"
+  ${DKMS_FILE_NAME}
   @ONLY
   )
 
 configure_file (
-  "${CMAKE_SOURCE_DIR}/CMake/config/${DKMS_POSTINST}.in"
-  "edge/postinst"
+  "${CMAKE_SOURCE_DIR}/CMake/config/edge/${DKMS_POSTINST}.in"
+  ${DKMS_POSTINST}
   @ONLY
   )
 
 configure_file (
-  "${CMAKE_SOURCE_DIR}/CMake/config/${DKMS_PRERM}.in"
-  "edge/prerm"
+  "${CMAKE_SOURCE_DIR}/CMake/config/edge/${DKMS_PRERM}.in"
+  ${DKMS_PRERM}
   @ONLY
   )
 

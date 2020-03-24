@@ -246,7 +246,7 @@ if [[ $CPU == "aarch64" ]] && [[ $edge == 1 ]]; then
   cd $edge_dir
   if [[ $nocmake == 0 ]]; then
     echo "$CMAKE -DRDI_CCACHE=$ccache -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXPORT_COMPILE_COMMANDS=ON ../../src"
-    time env XRT_NATIVE_BUILD=no XRT_EDGE_BUILD=yes $CMAKE -DRDI_CCACHE=$ccache -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXPORT_COMPILE_COMMANDS=ON ../../src
+    time env XRT_EDGE_BUILD=yes $CMAKE -DRDI_CCACHE=$ccache -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXPORT_COMPILE_COMMANDS=ON ../../src
   fi
 
   if [[ $docs == 1 ]]; then
