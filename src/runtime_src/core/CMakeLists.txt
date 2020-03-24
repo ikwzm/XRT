@@ -4,9 +4,9 @@ include_directories(
 
 add_subdirectory(include)
 add_subdirectory(common)
- if (${XRT_NATIVE_BUILD} STREQUAL "yes")
+ if (${XRT_EDGE_BUILD} STREQUAL "yes")
+   add_subdirectory(edge)
+ else()
    add_subdirectory(pcie)
    add_subdirectory(tools)
- else()
-   add_subdirectory(edge)
  endif()

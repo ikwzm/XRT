@@ -1,0 +1,8 @@
+PACKAGE_NAME="xrt-zocl"
+PACKAGE_VERSION="@XRT_VERSION_STRING@"
+MAKE[0]="make -C edge/drm/zocl KERNELDIR=${kernel_source_dir};"
+CLEAN="make clean -C edge/drm/zocl KERNELDIR=${kernel_source_dir};"
+BUILT_MODULE_NAME="zocl"
+BUILT_MODULE_LOCATION="driver/edge/drm/zocl"
+DEST_MODULE_LOCATION="/kernel/extras"
+AUTOINSTALL="yes"

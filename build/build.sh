@@ -154,7 +154,7 @@ cd $BUILDDIR
 
 if [[ $clean == 1 ]]; then
     echo $PWD
-    echo "/bin/rm -rf $debug_dir $release_dir"
+    echo "/bin/rm -rf $debug_dir $release_dir $edge_dir"
     /bin/rm -rf $debug_dir $release_dir $edge_dir
     exit 0
 fi
@@ -238,6 +238,28 @@ if [[ $CPU != "aarch64" ]] && [[ $edge == 1 ]]; then
   fi
   echo "make -j $jcore $verbose DESTDIR=$PWD"
   time make -j $jcore $verbose DESTDIR=$PWD
+  cd $BUILDDIR
+fi
+    
+if [[ $CPU == "aarch64" ]] && [[ $edge == 1 ]]; then
+  mkdir -p $edge_dir
+  cd $edge_dir
+  if [[ $nocmake == 0 ]]; then
+    echo "$CMAKE -DRDI_CCACHE=$ccache -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXPORT_COMPILE_COMMANDS=ON ../../src"
+    time env XRT_NATIVE_BUILD=no XRT_EDGE_BUILD=yes $CMAKE -DRDI_CCACHE=$ccache -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXPORT_COMPILE_COMMANDS=ON ../../src
+  fi
+
+  if [[ $docs == 1 ]]; then
+    echo "make xrt_docs"
+    make xrt_docs
+  else
+    echo "make -j $jcore $verbose DESTDIR=$PWD"
+    time make -j $jcore $verbose DESTDIR=$PWD
+    time ctest --output-on-failure
+    time make package
+  fi
+
+
   cd $BUILDDIR
 fi
     

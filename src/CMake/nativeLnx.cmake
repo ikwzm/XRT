@@ -149,6 +149,7 @@ include (CMake/dkms.cmake)
 include (CMake/dkms-aws.cmake)
 include (CMake/dkms-azure.cmake)
 include (CMake/dkms-container.cmake)
+include (CMake/dkms-edge.cmake)
 
 # --- ICD ---
 include (CMake/icd.cmake)
