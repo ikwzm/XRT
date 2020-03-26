@@ -38,6 +38,7 @@ SET (XRT_DKMS_CORE_COMMON_DRV    ${XRT_DKMS_CORE_DIR}/common/drv)
 SET (XRT_DKMS_DRIVER_SRCS
   edge/drm/zocl/LICENSE
   edge/drm/zocl/Makefile
+  edge/drm/zocl/10-zocl.rules
   edge/drm/zocl/sched_exec.c
   edge/drm/zocl/sched_exec.h
   edge/drm/zocl/zocl_bo.c
