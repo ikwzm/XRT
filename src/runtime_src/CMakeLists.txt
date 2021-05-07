@@ -24,7 +24,7 @@ endif()
 add_compile_options("-fPIC")
 
 # TODO CL_TARGET_OPENCL_VERSION is not defined..
-if (${XRT_NATIVE_BUILD} STREQUAL "yes")
+if (${XRT_EDGE_BUILD} STREQUAL "no")
   add_compile_options("-Wall" "-Werror")
 endif()
 add_subdirectory(xdp)

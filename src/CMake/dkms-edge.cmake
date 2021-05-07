@@ -35,6 +35,7 @@ SET (XRT_DKMS_CORE_COMMON_DRV ${XRT_DKMS_CORE_DIR}/common/drv)
 
 SET (XRT_DKMS_DRIVER_SRCS
   zocl/include/sched_exec.h
+  zocl/include/zocl_aie.h
   zocl/include/zocl_bo.h
   zocl/include/zocl_cu.h
   zocl/include/zocl_dma.h
@@ -53,6 +54,7 @@ SET (XRT_DKMS_DRIVER_SRCS
   zocl/LICENSE
   zocl/Makefile
   zocl/sched_exec.c
+  zocl/zocl_aie.c
   zocl/zocl_bo.c
   zocl/zocl_cu.c
   zocl/zocl_dma.c
@@ -86,6 +88,7 @@ SET (XRT_DKMS_COMMON_XRT_DRV
   common/drv/xrt_cu.c
   common/drv/cu_hls.c
   common/drv/cu_plram.c
+  common/drv/fast_adapter.c
   common/drv/xrt_xclbin.c
   common/drv/Makefile
   )

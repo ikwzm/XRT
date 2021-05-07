@@ -261,6 +261,31 @@ if [[ $CPU != "aarch64" ]] && [[ $edge == 1 ]]; then
   cd $BUILDDIR
 fi
     
+if [[ $CPU == "aarch64" ]] && [[ $edge == 1 ]]; then
+  mkdir -p $edge_dir
+  cd $edge_dir
+  if [[ $nocmake == 0 ]]; then
+    echo "env XRT_EDGE_BUILD=yes $CMAKE -DRDI_CCACHE=$ccache -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXPORT_COMPILE_COMMANDS=ON ../../src"
+    time  env XRT_EDGE_BUILD=yes $CMAKE -DRDI_CCACHE=$ccache -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXPORT_COMPILE_COMMANDS=ON ../../src
+  fi
+
+  if [[ $nobuild == 0 ]]; then
+      echo "make -j $jcore $verbose DESTDIR=$PWD install"
+      time make -j $jcore $verbose DESTDIR=$PWD install
+
+      if [[ $noctest == 0 ]]; then
+          time ctest --output-on-failure
+      fi
+
+      time make package
+  fi
+
+  if [[ $docs == 1 ]]; then
+      echo "make xrt_docs"
+      make xrt_docs
+  fi
+fi
+    
     
 if [[ $clangtidy == 1 ]]; then
     echo "make clang-tidy"
